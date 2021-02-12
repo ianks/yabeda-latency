@@ -15,7 +15,7 @@ module Yabeda
 
       context 'when there is a X-Request-Start header' do
         it 'measures request latency' do
-          env = { 'HTTP_X_REQUEST_START' => "t=#{(Time.now.to_f * 1000).to_i - 100}" }
+          env = { 'HTTP_X_REQUEST_START' => "t=#{Time.now.to_f - 0.1}" }
           middleware.call(env)
 
           expect(Yabeda.rack_http_request_latency_seconds.sums).to match(
@@ -24,14 +24,14 @@ module Yabeda
         end
 
         it 'skips measuring if the latency is negative' do
-          env = { 'HTTP_X_REQUEST_START' => "t=#{(Time.now.to_f * 1000).to_i + 10_000}" }
+          env = { 'HTTP_X_REQUEST_START' => "t=#{Time.now.to_f + 10_000}" }
           middleware.call(env)
 
           expect(Yabeda.rack_http_request_latency_seconds.sums).to match({})
         end
 
         it 'calls the app' do
-          env = { 'HTTP_X_REQUEST_START' => "t=#{(Time.now.to_f * 1000).to_i - 100}" }
+          env = { 'HTTP_X_REQUEST_START' => "t=#{(Time.now.to_f).round(2) - 0.1}" }
           middleware.call(env)
 
           expect(app).to have_received(:call).with(env)

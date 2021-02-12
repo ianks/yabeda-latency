@@ -67,11 +67,11 @@ module Yabeda
 
       def calculate_latency_seconds(env, now)
         raw_header_value = env[REQUEST_START_HEADER]
-        request_start_timestamp_ms = extract_timestamp_from_header_value(raw_header_value)
+        request_start_timestamp_s = extract_timestamp_from_header_value(raw_header_value)
 
-        return unless request_start_timestamp_ms
+        return unless request_start_timestamp_s
 
-        now.to_f - (request_start_timestamp_ms / 1000)
+        now.to_f - request_start_timestamp_s
       end
 
       def extract_timestamp_from_header_value(value)
@@ -86,7 +86,7 @@ module Yabeda
 
         return unless str
 
-        str.to_i
+        str.to_f
       end
     end
   end
