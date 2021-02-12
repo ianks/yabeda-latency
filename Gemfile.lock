@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    yabeda-latency (0.1.0)
+    yabeda-latency (0.1.1)
       yabeda (~> 0.2)
 
 GEM
