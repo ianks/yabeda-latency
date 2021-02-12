@@ -14,9 +14,10 @@ module Yabeda
     class Collector
       attr_reader :app, :registry
 
-      def initialize(app, metrics_prefix: :http_server)
+      def initialize(app, metrics_prefix: :http_server, debug: false)
         @app = app
         @metrics_prefix = metrics_prefix
+        @debug = debug
 
         init_request_metrics
       end
@@ -32,8 +33,8 @@ module Yabeda
       def observe(env, now)
         latency_seconds = calculate_latency_seconds(env, now)
         measure(latency_seconds) unless latency_seconds.nil?
-      rescue StandardError
-        # ok
+      rescue StandardError => e
+        warn "Could not observe latency (#{e.message})" if @debug
       end
 
       # rubocop:disable Metrics/MethodLength
@@ -68,6 +69,8 @@ module Yabeda
       def calculate_latency_seconds(env, now)
         raw_header_value = env[REQUEST_START_HEADER]
         request_start_timestamp_s = extract_timestamp_from_header_value(raw_header_value)
+
+        puts "X-Request-Start: #{raw_header_value}, Now: #{now.to_f}" if @debug
 
         return unless request_start_timestamp_s
 
