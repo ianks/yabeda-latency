@@ -23,13 +23,18 @@ module Yabeda
 
       def call(env) # :nodoc:
         now = Time.now
-        latency_seconds = calculate_latency_seconds(env, now)
-        measure(latency_seconds) unless latency_seconds.nil?
-      ensure
+        observe(env, now)
         @app.call(env)
       end
 
       protected
+
+      def observe(env, now)
+        latency_seconds = calculate_latency_seconds(env, now)
+        measure(latency_seconds) unless latency_seconds.nil?
+      rescue StandardError
+        # ok
+      end
 
       # rubocop:disable Metrics/MethodLength
       def init_request_metrics
