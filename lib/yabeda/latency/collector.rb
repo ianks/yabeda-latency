@@ -44,7 +44,7 @@ module Yabeda
         Yabeda.configure do
           group prefix do
             histogram(
-              :request_latency_seconds,
+              :request_latency,
               comment: 'The time for the HTTP request to reach Rack application',
               unit: :seconds,
               per: :field,
@@ -57,7 +57,7 @@ module Yabeda
       # rubocop:enable Metrics/MethodLength
 
       def metric
-        @metric ||= Yabeda.__send__(@metrics_prefix).request_latency_seconds
+        @metric ||= Yabeda.__send__(@metrics_prefix).request_latency
       end
 
       def measure(latency_seconds)

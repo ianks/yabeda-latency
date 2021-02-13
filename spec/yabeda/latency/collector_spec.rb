@@ -10,7 +10,7 @@ module Yabeda
       let(:app) { double(call: true) }
 
       after do
-        Yabeda.rack_http.request_latency_seconds.sums.clear # This is a hack
+        Yabeda.rack_http.request_latency.sums.clear # This is a hack
       end
 
       context 'when there is a X-Request-Start header' do
@@ -18,7 +18,7 @@ module Yabeda
           env = { 'HTTP_X_REQUEST_START' => "t=#{Time.now.to_f - 0.1}" }
           middleware.call(env)
 
-          expect(Yabeda.rack_http_request_latency_seconds.sums).to match(
+          expect(Yabeda.rack_http_request_latency.sums).to match(
             {} => (be > 0.1).and(be < 1.0)
           )
         end
@@ -27,7 +27,7 @@ module Yabeda
           env = { 'HTTP_X_REQUEST_START' => "t=#{Time.now.to_f + 10_000}" }
           middleware.call(env)
 
-          expect(Yabeda.rack_http_request_latency_seconds.sums).to match({})
+          expect(Yabeda.rack_http_request_latency.sums).to match({})
         end
 
         it 'calls the app' do
@@ -43,7 +43,7 @@ module Yabeda
           env = {}
           middleware.call(env)
 
-          expect(Yabeda.rack_http_request_latency_seconds.sums).to match({})
+          expect(Yabeda.rack_http_request_latency.sums).to match({})
           expect(app).to have_received(:call).with(env)
         end
       end
