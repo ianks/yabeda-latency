@@ -2,7 +2,7 @@
 
 module Yabeda
   module Latency
-    LATENCY_BUCKETS = [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10].freeze
+    LATENCY_BUCKETS = [0.0025, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5].freeze
     EMPTY_HASH = {}.freeze
     REQUEST_START_HEADER = 'HTTP_X_REQUEST_START'
 
