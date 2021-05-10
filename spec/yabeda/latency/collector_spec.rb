@@ -36,6 +36,13 @@ module Yabeda
 
           expect(app).to have_received(:call).with(env)
         end
+
+        it 'skips measuring if the rack.warming_up is true' do
+          env = { 'HTTP_X_REQUEST_START' => "t=#{Time.now.to_f - 0.1}", 'rack.warming_up' => true }
+          middleware.call(env)
+
+          expect(Yabeda.rack_http_request_latency.sums).to match({})
+        end
       end
 
       context 'when there is not a X-Request-Start header' do

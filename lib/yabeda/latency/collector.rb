@@ -23,6 +23,8 @@ module Yabeda
       end
 
       def call(env) # :nodoc:
+        return @app.call(env) if env['rack.warming_up']
+
         now = Time.now
         observe(env, now)
         @app.call(env)
